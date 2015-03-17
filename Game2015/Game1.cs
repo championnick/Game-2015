@@ -59,7 +59,7 @@ namespace Game2015
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             //rectangle = Content.Load<Texture2D>("Pictures/Rectangle");
-           // font = Content.Load<SpriteFont>("Fonts/Score");
+           font = Content.Load<SpriteFont>("Fonts/Score");
             TestWalk = Content.Load<Texture2D>("Pictures/SmileyWalk");
             animatedSprite = new AnimatedSprite(TestWalk, 4, 4);
             // TODO: use this.Content to load your game content here
