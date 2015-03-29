@@ -19,16 +19,10 @@ namespace Game2015
         //Game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Texture2D rectangle;
-        private SpriteFont font;
 
-        //Game attributes
-        private int score = 0;
 
-        //Character attributes
-        private float angle = 0;
-        private AnimatedSprite animatedSprite;
-        Texture2D TestWalk;
+        Player player;
+
 
         public Game1()
             : base()
@@ -56,13 +50,12 @@ namespace Game2015
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            //rectangle = Content.Load<Texture2D>("Pictures/Rectangle");
-           font = Content.Load<SpriteFont>("Fonts/Score");
-            TestWalk = Content.Load<Texture2D>("Pictures/SmileyWalk");
-            animatedSprite = new AnimatedSprite(TestWalk, 4, 4);
-            // TODO: use this.Content to load your game content here
+
+            player = new Player(new Vector2(100, 100));
+            player.LoadContent(Content);
+
         }
 
         /// <summary>
@@ -85,10 +78,9 @@ namespace Game2015
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            angle += 0.01f;
-            animatedSprite.Update();
             // TODO: Add your update logic here
 
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -102,20 +94,11 @@ namespace Game2015
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // spriteBatch.Begin();
+            spriteBatch.Begin();
 
-            //Used for rotation
-            // Vector2 location = new Vector2(400, 240);
-            // Rectangle sourceRectangle = new Rectangle(0, 0, rectangle.Width, rectangle.Height);
-            // Vector2 origin = new Vector2(rectangle.Width / 2, rectangle.Height / 2);
+                player.Draw(spriteBatch);
 
-            // spriteBatch.DrawString(font, "Score" + "  " + score, new Vector2(0, 0), Color.Black);
-            // spriteBatch.Draw(rectangle, location, sourceRectangle, Color.White, angle, origin, 1.0f, SpriteEffects.None, 1);
-
-            //spriteBatch.End();
-
-            animatedSprite.Draw(spriteBatch, new Vector2(400, 200));
-
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

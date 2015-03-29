@@ -8,44 +8,70 @@ using Microsoft.Xna.Framework;
 namespace Game2015
 {
 
-    public class AnimatedSprite
+    abstract class AnimatedSprite 
     {
-        public Texture2D Texture { get; set; }
-        public int Rows { get; set; }
-        public int Columns { get; set; }
-        private int currentFrame;
-        private int totalFrames;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns)
+        protected Texture2D sTexture;
+        private Vector2 sPosition;
+        private Rectangle[] sRectangles;
+
+       // private int xFrameIndex;
+        //private int yFrameIndex;
+        private int frameIndex;
+
+        private double timeElapsed;
+        private double timeToUpdate;
+
+        public int FramesPerSecond
         {
-            Texture = texture;
-            Rows = rows;
-            Columns = columns;
-            currentFrame = 0;
-            totalFrames = Rows * Columns;
+            set { timeToUpdate = (1f / value); }
         }
 
-        public void Update()
+        public AnimatedSprite(Vector2 position)
         {
-            currentFrame++;
-            if (currentFrame == totalFrames)
-                currentFrame = 0;
+            sPosition = position;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
+        public void AddAnimation(int frames)
         {
-            int width = Texture.Width / Columns;
-            int height = Texture.Height / Rows;
-            int row = (int)((float)currentFrame / (float)Columns);
-            int column = currentFrame % Columns;
+            int width = sTexture.Width / frames;
 
-            Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            sRectangles = new Rectangle[frames];
 
-            spriteBatch.Begin();
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-            spriteBatch.End();
+            for (int i = 0; i < frames; ++i )
+            {
+                sRectangles[i] = new Rectangle(i * width, 0, width, sTexture.Height);
+
+            }
+
         }
+        public void Update(GameTime gameTime)
+        {
+            timeElapsed += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if(timeElapsed > timeToUpdate)
+            {
+                timeElapsed -= timeToUpdate;
+
+                if(frameIndex < sRectangles.Length - 1)
+                {
+                    frameIndex++;
+                }
+                else
+                {
+                    frameIndex = 0;
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+
+            spriteBatch.Draw(sTexture, sPosition, sRectangles[frameIndex], Color.White);
+
+        }
+
+
     }
 
 }
